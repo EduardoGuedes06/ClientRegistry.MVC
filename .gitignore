@@ -1,0 +1,6 @@
+.vs
+/src/ClientRegistry.Data/obj
+/src/ClientRegistry.Domain/obj
+/src/ClientRegistry.MVC/bin/Debug/net8.0
+/src/ClientRegistry.MVC/obj
+/src/ClientRegistry.Service/obj
