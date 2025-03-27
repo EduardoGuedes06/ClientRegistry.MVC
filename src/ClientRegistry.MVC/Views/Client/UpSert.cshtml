@@ -1,0 +1,27 @@
+﻿@model ClientViewModel
+
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Add Client" : "Edit Client";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <label>Name</label>
+    <input asp-for="Name" class="form-control" required />
+    <span asp-validation-for="Name"></span>
+
+    <label>Document</label>
+    <input asp-for="Document" class="form-control" required />
+    <span asp-validation-for="Document"></span>
+
+    <label>Phone</label>
+    <input asp-for="Phone" class="form-control" required />
+    <span asp-validation-for="Phone"></span>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="@Url.Action("Index")">Back</a>

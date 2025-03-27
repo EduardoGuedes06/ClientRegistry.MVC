@@ -1,0 +1,51 @@
+﻿@model PagedClientViewModel
+
+<h1>Clientes</h1>
+
+<!-- Formulário de Pesquisa -->
+<form method="get" class="form-inline mb-3">
+    <div class="form-group">
+        <input type="text" name="search" class="form-control" placeholder="Buscar" value="@Model.Search" />
+    </div>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<p>Resultado para: <strong>@Model.Search</strong></p>
+
+<!-- Tabela de Clientes -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <!-- Adicione outras colunas conforme necessário -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model.Clients)
+        {
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.Phone</td>
+                <td>@client.Document</td>
+                <td>@client.RegisterDateTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Paginação -->
+<div class="pagination">
+    @if (Model.Page > 1)
+    {
+        <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })" class="btn btn-link">Anterior</a>
+    }
+
+    <span>Página @Model.Page de @Model.TotalPages</span>
+
+    @if (Model.Page < Model.TotalPages)
+    {
+        <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })" class="btn btn-link">Próximo</a>
+    }
+</div>
