@@ -4,3 +4,6 @@
 /src/ClientRegistry.MVC/bin/Debug/net8.0
 /src/ClientRegistry.MVC/obj
 /src/ClientRegistry.Service/obj
+/src/ClientRegistry.Data/bin/Debug/net8.0
+/src/ClientRegistry.Domain/bin/Debug/net8.0
+/src/ClientRegistry.Service/bin/Debug/net8.0
