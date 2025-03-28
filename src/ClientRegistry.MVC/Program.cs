@@ -1,6 +1,10 @@
 using ClientRegistry.Data.Context;
 using ClientRegistry.MVC.Configurations;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using ClientRegistry.MVC.Models.Validations;
+using ClientRegistry.MVC.Models.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +13,6 @@ builder.Configuration
     .AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
-
 
 builder.Services.AddDbContext<MeuDbContext>(options =>
 {
@@ -22,7 +25,8 @@ builder.Services.ResolveDependencies();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientValidation>());
 
 var app = builder.Build();
 
@@ -41,9 +45,9 @@ app.UseAuthorization();
 
 app.UseGlobalizationConfig();
 
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
 app.Run();

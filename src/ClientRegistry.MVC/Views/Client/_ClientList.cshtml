@@ -1,9 +1,9 @@
 ﻿@model PagedClientViewModel
 
-<h1>Clientes</h1>
+<h2>Clientes</h2>
 
 <!-- Formulário de Pesquisa -->
-<form method="get" class="form-inline mb-3">
+<form method="get" id="search-form" class="form-inline mb-3">
     <div class="form-group">
         <input type="text" name="search" class="form-control" placeholder="Buscar" value="@Model.Search" />
     </div>
@@ -16,10 +16,12 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <!-- Adicione outras colunas conforme necessário -->
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Type</th>
+            <th>Document</th>
+            <th>Register</th>
+            <th>Options</th>
         </tr>
     </thead>
     <tbody>
@@ -28,10 +30,19 @@
             <tr>
                 <td>@client.Name</td>
                 <td>@client.Phone</td>
+                <td>@client.Type</td>
                 <td>@client.Document</td>
                 <td>@client.RegisterDateTime</td>
+                <td>
+                    <a href="@Url.Action("UpSert", "Client", new { id = client.Id })" class="btn btn-warning">Edit</a>
+                    <form action="@Url.Action("Delete", "Client", new { id = client.Id })" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
         }
+
     </tbody>
 </table>
 
@@ -39,13 +50,13 @@
 <div class="pagination">
     @if (Model.Page > 1)
     {
-        <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })" class="btn btn-link">Anterior</a>
+        <a href="#" class="page-link" data-page="@(Model.Page - 1)">Anterior</a>
     }
 
     <span>Página @Model.Page de @Model.TotalPages</span>
 
     @if (Model.Page < Model.TotalPages)
     {
-        <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })" class="btn btn-link">Próximo</a>
+        <a href="#" class="page-link" data-page="@(Model.Page + 1)">Próximo</a>
     }
 </div>

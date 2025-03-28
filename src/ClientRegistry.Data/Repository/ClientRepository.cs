@@ -18,6 +18,7 @@ namespace ClientRegistry.Data.Repository
         public async Task<PagedResult<Client>> GetPaged(string? search, int page, int pageSize)
         {
             IQueryable<Client> query = Db.Client.AsNoTracking();
+            query = query.Where(c => c.Active == true);
 
             if (!string.IsNullOrEmpty(search))
             {

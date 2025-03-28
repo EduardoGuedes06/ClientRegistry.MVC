@@ -7,7 +7,7 @@
         public string Type { get; set; } = string.Empty;
         public string Document { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-        public bool IsDeleted { get; set; } = false;
+        public bool Active { get; set; } = true;
         public DateTime RegisterDateTime { get; set; }
     }
 }

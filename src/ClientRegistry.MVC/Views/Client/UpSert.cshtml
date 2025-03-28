@@ -7,21 +7,98 @@
 <h2>@ViewData["Title"]</h2>
 
 <form method="post">
-    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label for="Name">Name</label>
+        <input asp-for="Name" class="form-control" id="Name" required />
+        <span asp-validation-for="Name" class="text-danger" id="name-error"></span>
+    </div>
 
-    <label>Name</label>
-    <input asp-for="Name" class="form-control" required />
-    <span asp-validation-for="Name"></span>
+    <div class="form-group">
+        <label for="Document">Document (CPF/CNPJ)</label>
+        <input asp-for="Document" class="form-control" id="Document" required />
+        <span asp-validation-for="Document" class="text-danger" id="document-error"></span>
+    </div>
 
-    <label>Document</label>
-    <input asp-for="Document" class="form-control" required />
-    <span asp-validation-for="Document"></span>
+    <div class="form-group">
+        <label for="Phone">Phone</label>
+        <input asp-for="Phone" class="form-control" id="Phone" required />
+        <span asp-validation-for="Phone" class="text-danger" id="phone-error"></span>
+    </div>
 
-    <label>Phone</label>
-    <input asp-for="Phone" class="form-control" required />
-    <span asp-validation-for="Phone"></span>
+    <input asp-for="Type" type="hidden" id="Type" />
 
-    <button type="submit">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-<a href="@Url.Action("Index")">Back</a>
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Back</a>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $("#Phone").on("input", function () {
+            var phoneField = $(this);
+            var phoneError = $("#phone-error");
+            var phoneValue = phoneField.val();
+
+            var phoneWithoutMask = phoneValue.replace(/\D/g, "");
+
+            if (phoneWithoutMask.length <= 10) {
+                phoneField.val(phoneWithoutMask.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3"));
+            } else if (phoneWithoutMask.length <= 11) {
+                phoneField.val(phoneWithoutMask.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"));
+            }
+
+            var phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+            if (!phoneRegex.test(phoneField.val())) {
+                phoneError.text("O telefone deve estar no formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.");
+            } else {
+                phoneError.text("");
+            }
+        });
+
+        $("#Document").on("input", function () {
+            var documentField = $(this);
+            var documentError = $("#document-error");
+            var documentValue = documentField.val();
+            var documentWithoutMask = documentValue.replace(/\D/g, "");
+
+            if (documentWithoutMask.length <= 11) {
+                documentField.val(documentWithoutMask.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"));
+                $("#Type").val("PF");  // CPF, set Type to PF
+            } else if (documentWithoutMask.length <= 14) {
+                documentField.val(documentWithoutMask.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"));
+                $("#Type").val("PJ");  // CNPJ, set Type to PJ
+            }
+
+            var cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+            var cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+
+            if (!(cpfRegex.test(documentField.val()) || cnpjRegex.test(documentField.val()))) {
+                documentError.text("O documento deve estar no formato válido de CPF ou CNPJ.");
+            } else {
+                documentError.text("");
+            }
+        });
+
+        $("#Name").on("blur", function () {
+            var nameField = $(this);
+            var nameError = $("#name-error");
+            var nameValue = nameField.val();
+
+            if (!nameValue.trim()) {
+                nameError.text("O nome é obrigatório.");
+                return;
+            }
+
+            var correctedName = nameValue.replace(/\b\w/g, function (match, index) {
+                return index === 0 ? match.toUpperCase() : match.toLowerCase();
+            });
+
+
+            nameField.val(correctedName);
+            nameError.text("");
+        });
+    });
+</script>

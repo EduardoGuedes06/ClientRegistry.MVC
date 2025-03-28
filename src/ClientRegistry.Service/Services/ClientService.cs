@@ -1,11 +1,6 @@
 ﻿using ClientRegistry.Domain;
 using ClientRegistry.Domain.Interfaces;
 using ClientRegistry.Domain.Models;
-using ClientRegistry.Domain.Models.Validations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClientRegistry.Service.Services
 {
@@ -24,7 +19,6 @@ namespace ClientRegistry.Service.Services
             return await _clientRepository.GetPaged(search, page, pageSize);
         }
 
-
         public async Task<Client?> GetById(Guid id)
         {
             return await _clientRepository.ObterPorId(id);
@@ -37,7 +31,6 @@ namespace ClientRegistry.Service.Services
 
         public async Task Post(Client client)
         {
-            if (!ExecutarValidacao(new ClientValidation(), client)) return;
 
             if (await _clientRepository.Buscar(c => c.Document == client.Document).ContinueWith(t => t.Result.Any()))
             {
@@ -50,8 +43,6 @@ namespace ClientRegistry.Service.Services
 
         public async Task Update(Client client)
         {
-            if (!ExecutarValidacao(new ClientValidation(), client)) return;
-
             if (await _clientRepository.Buscar(c => c.Document == client.Document && c.Id != client.Id).ContinueWith(t => t.Result.Any()))
             {
                 Notificar("Já existe um cliente com este documento cadastrado.");

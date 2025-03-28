@@ -36,9 +36,9 @@ namespace ClientRegistry.Data.Mappings
                 .IsRequired()
                 .HasColumnType("datetime");
 
-            builder.Property(p => p.IsDeleted)
+            builder.Property(p => p.Active)
                 .IsRequired()
-                .HasDefaultValue(false);
+                .HasDefaultValue(true);
 
             builder.ToTable("Clients");
         }

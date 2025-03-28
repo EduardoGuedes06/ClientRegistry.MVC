@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ClientRegistry.Domain.Models.Validations.Utils
+namespace ClientRegistry.MVC.Models.Validations.Utils
 {
     public static class CnpjValidation
     {
@@ -14,8 +14,6 @@ namespace ClientRegistry.Domain.Models.Validations.Utils
         public static bool Validate(string cnpj)
         {
             if (string.IsNullOrWhiteSpace(cnpj)) return false;
-
-            cnpj = RemoveNonNumeric(cnpj);
 
             if (cnpj.Length != CnpjLength) return false;
 
@@ -48,11 +46,6 @@ namespace ClientRegistry.Domain.Models.Validations.Utils
             int digit2 = remainder < 2 ? 0 : 11 - remainder;
 
             return cnpj.EndsWith(digit1.ToString() + digit2.ToString());
-        }
-
-        private static string RemoveNonNumeric(string value)
-        {
-            return Regex.Replace(value, "[^0-9]", "");
         }
     }
 }

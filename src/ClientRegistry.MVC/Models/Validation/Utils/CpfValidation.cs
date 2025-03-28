@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ClientRegistry.Domain.Models.Validations.Utils
+namespace ClientRegistry.MVC.Models.Validations.Utils
 {
     public static class CpfValidation
     {
@@ -14,8 +14,6 @@ namespace ClientRegistry.Domain.Models.Validations.Utils
         public static bool Validate(string cpf)
         {
             if (string.IsNullOrWhiteSpace(cpf)) return false;
-
-            cpf = RemoveNonNumeric(cpf);
 
             if (cpf.Length != CpfLength) return false;
 
@@ -50,9 +48,5 @@ namespace ClientRegistry.Domain.Models.Validations.Utils
             return cpf.EndsWith(digit1.ToString() + digit2.ToString());
         }
 
-        private static string RemoveNonNumeric(string value)
-        {
-            return Regex.Replace(value, "[^0-9]", "");
-        }
     }
 }

@@ -1,12 +1,8 @@
-﻿using ClientRegistry.Domain.Models.Validations.Utils;
+﻿using ClientRegistry.Domain.Models;
+using ClientRegistry.MVC.Models.Validations.Utils;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ClientRegistry.Domain.Models.Validations
+namespace ClientRegistry.MVC.Models.Validation
 {
     public class ClientValidation : AbstractValidator<Client>
     {
@@ -23,17 +19,21 @@ namespace ClientRegistry.Domain.Models.Validations
 
             When(c => c.Type == "PF", () =>
             {
-                RuleFor(c => c.Document.Length).Equal(CpfValidation.CpfLength)
-                    .WithMessage("O campo Documento precisa ter {ComparisonValue} caracteres, mas foi fornecido {PropertyValue}.");
-                RuleFor(c => CpfValidation.Validate(c.Document)).Equal(true)
+                RuleFor(c => c.Document)
+                    .Length(CpfValidation.CpfLength).WithMessage("O campo Documento precisa ter {ComparisonValue} caracteres, mas foi fornecido {PropertyValue}.");
+
+                RuleFor(c => c.Document)
+                    .Must(CpfValidation.Validate)
                     .WithMessage("O documento fornecido é inválido.");
             });
 
             When(c => c.Type == "PJ", () =>
             {
-                RuleFor(c => c.Document.Length).Equal(CnpjValidation.CnpjLength)
-                    .WithMessage("O campo Documento precisa ter {ComparisonValue} caracteres, mas foi fornecido {PropertyValue}.");
-                RuleFor(c => CnpjValidation.Validate(c.Document)).Equal(true)
+                RuleFor(c => c.Document)
+                    .Length(CnpjValidation.CnpjLength).WithMessage("O campo Documento precisa ter {ComparisonValue} caracteres, mas foi fornecido {PropertyValue}.");
+
+                RuleFor(c => c.Document)
+                    .Must(CnpjValidation.Validate)
                     .WithMessage("O documento fornecido é inválido.");
             });
         }
