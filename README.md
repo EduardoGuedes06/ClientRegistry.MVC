@@ -65,7 +65,7 @@ O sistema permite o cadastro de clientes com as seguintes informações:
 
 ### Gráficos Gerados
 
-    ![Data](doc/Images/Data.PNG)
+   ![Data](doc/Images/Data.PNG)
 
 - **Cadastros por Dia**: Gráfico de barras mostrando os cadastros por dia.
 - **Proporção de PF vs PJ**: Gráfico de pizza exibindo a proporção de clientes PF e PJ.
