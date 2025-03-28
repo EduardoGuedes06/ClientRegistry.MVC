@@ -115,18 +115,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-
         var sortDirection = 'asc';
 
         $('th[data-column]').click(function () {
-            var column = $(this).data('column');
+            var columnIndex = $(this).index();
             var rows = $('#clientTable tbody tr').get();
 
             sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
 
             rows.sort(function (a, b) {
-                var A = $(a).children('td').eq($(this).index()).text().toUpperCase();
-                var B = $(b).children('td').eq($(this).index()).text().toUpperCase();
+                var A = $(a).children('td').eq(columnIndex).text().toUpperCase();
+                var B = $(b).children('td').eq(columnIndex).text().toUpperCase();
 
                 if (sortDirection === 'asc') {
                     return A < B ? -1 : A > B ? 1 : 0;
@@ -142,16 +141,20 @@
             updateSortIcons($(this));
         });
 
-
         function updateSortIcons(clickedHeader) {
             $('th i').removeClass('fa-sort-up fa-sort-down');
             var icon = clickedHeader.find('i');
 
             if (sortDirection === 'asc') {
-                icon.addClass('fa-sort-up');
+                icon.removeClass('fa-sort').addClass('fa-sort-up');
             } else {
-                icon.addClass('fa-sort-down');
+                icon.removeClass('fa-sort').addClass('fa-sort-down');
             }
+
+            $('th').removeClass('sorted');
+            clickedHeader.addClass('sorted');
         }
     });
 </script>
+
+
