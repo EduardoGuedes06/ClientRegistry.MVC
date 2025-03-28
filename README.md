@@ -14,6 +14,9 @@ Este é o sistema **ClientRegistry** que permite o cadastro, visualização, edi
 
 ## Configuração do Ambiente
 
+Para o desenvolvimento, foi essencial o uso do MySQL, pois trata-se de um banco gratuito e de fácil manejo, o que facilitou a implementação e o gerenciamento dos dados.
+A publicação foi testada utilizando IIS e Docker Compose, garantindo flexibilidade e robustez na implementação do ambiente de produção.
+
 ### 1. Configurar a String de Conexão no `appsettings.json`
 
 No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e configure a string de conexão para o MySQL:
