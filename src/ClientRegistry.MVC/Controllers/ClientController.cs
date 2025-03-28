@@ -3,6 +3,7 @@ using ClientRegistry.Data.Repository;
 using ClientRegistry.Domain;
 using ClientRegistry.Domain.Interfaces;
 using ClientRegistry.Domain.Models;
+using ClientRegistry.Domain.Notification;
 using ClientRegistry.MVC.Models;
 using ClientRegistry.MVC.Models.Data;
 using ClientRegistry.MVC.Models.Validation;
@@ -14,6 +15,7 @@ namespace ClientRegistry.MVC.Controllers
     public class ClientController : BaseController
     {
         private readonly IClientService _clientService;
+
         private readonly IMapper _mapper;
 
         public ClientController(IMapper mapper, IClientService clientService, INotificator notificator)
@@ -59,6 +61,23 @@ namespace ClientRegistry.MVC.Controllers
             startDate = startDate ?? new DateTime(DateTime.Now.Year, 1, 1);
             endDate = endDate ?? new DateTime(DateTime.Now.Year, 12, 31);
 
+            var validator = new DateValidation();
+            var validationResult = await validator.ValidateAsync(new DataViewModel
+            {
+                StartDate = startDate?.ToString("yyyy-MM-dd"),
+                EndDate = endDate?.ToString("yyyy-MM-dd")
+            });
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                startDate = new DateTime(DateTime.Now.Year, 1, 1);
+                endDate = new DateTime(DateTime.Now.Year, 12, 31);
+            }
+
             var cadastroPorDia = await _clientService.GetCadastrosPorDia(startDate, endDate);
             var proporcaoTipoPessoa = await _clientService.GetProporcaoTipoPessoa(startDate, endDate);
             var evolucaoCadastros = await _clientService.GetEvolucaoCadastros(startDate, endDate);
@@ -70,13 +89,14 @@ namespace ClientRegistry.MVC.Controllers
                 ProporcaoTipoPessoa = _mapper.Map<ProporcaoTipoPessoaViewModel>(proporcaoTipoPessoa),
                 EvolucaoCadastros = _mapper.Map<EvolucaoCadastrosViewModel>(evolucaoCadastros),
                 CadastroPorDiaTipo = _mapper.Map<CadastroPorDiaTipoViewModel>(cadastroPorDiaTipo),
-
                 StartDate = startDate.Value.ToString("yyyy-MM-dd"),
                 EndDate = endDate.Value.ToString("yyyy-MM-dd")
             };
 
             return View(model);
         }
+
+
 
         // GET: Tela de Cadastro/Edição
         public async Task<IActionResult> UpSert(Guid? id)
@@ -128,7 +148,15 @@ namespace ClientRegistry.MVC.Controllers
             {
                 await _clientService.Update(client);
             }
-
+            if (!OperacaoValida())
+            {
+                var notifications = _notificator.GetNotifications();
+                foreach (var notification in notifications)
+                {
+                    ModelState.AddModelError("", notification.Message);
+                }
+                return View(model);
+            }
             if (OperacaoValida())
             {
                 return RedirectToAction("Index", "Client");

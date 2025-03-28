@@ -44,3 +44,21 @@ footer {
 .btn-light.text-danger {
     color: #f5f5f5;
 }
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+.modern-date {
+    width: 200px;
+}

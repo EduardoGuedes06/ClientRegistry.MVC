@@ -6,7 +6,7 @@ namespace ClientRegistry.MVC.Controllers
 {
     public abstract class BaseController : Controller
     {
-        private readonly INotificator _notificator;
+        public readonly INotificator _notificator;
 
         protected BaseController(INotificator notificador)
         {
