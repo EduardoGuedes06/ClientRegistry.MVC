@@ -61,10 +61,11 @@ O sistema permite o cadastro de clientes com as seguintes informações:
 ### Listagem de Clientes
 
 ![Start](doc/Images/Start.PNG)
-- **Filtros**: É possível filtrar os clientes por **Nome** ou **Documento**.
+- **Filtros**: É possível filtrar os clientes por **Nome** , **Documento** e **Telefone** .
 
 ### Gráficos Gerados
 
+    Todos os Graficos estão em Portugues
    ![Data](doc/Images/Data.PNG)
 
 - **Cadastros por Dia**: Gráfico de barras mostrando os cadastros por dia.
