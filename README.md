@@ -26,9 +26,12 @@ No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e config
 }
 ```
 
-### 2. Executar a ORM para a geração do Banco no `appsettings.json`
+### 2. Executar a ORM para a geração do Banco pelo `Gerenciador de Pacotes`
 
 No Gerenciador de Pacotes do VStudio, selecione o ProjetoPadrão: Infra, e digite: `Update-Database`
+
+[Baixar arquivo com Inserts para o MYSQL](https://raw.githubusercontent.com/EduardoGuedes06/ClientRegistry.MVC/doc/Insert.sql)
+
 
 ## Funcionalidades
 
