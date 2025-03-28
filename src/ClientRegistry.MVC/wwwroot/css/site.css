@@ -25,3 +25,22 @@ footer {
         footer a:hover {
             text-decoration: underline;
         }
+
+.btn {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+
+.btn-light.text-primary {
+    color: #f5f5f5;
+}
+
+
+.btn-light.text-danger {
+    color: #f5f5f5;
+}

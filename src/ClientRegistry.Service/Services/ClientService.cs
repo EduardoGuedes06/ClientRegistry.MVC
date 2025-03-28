@@ -1,6 +1,7 @@
 ﻿using ClientRegistry.Domain;
 using ClientRegistry.Domain.Interfaces;
 using ClientRegistry.Domain.Models;
+using ClientRegistry.Domain.Models.Data;
 using OfficeOpenXml;
 using System.Drawing.Printing;
 using System.Reflection;
@@ -28,7 +29,6 @@ namespace ClientRegistry.Service.Services
             return pagedResult.Items;
         }
 
-
         public async Task<byte[]> ExportToExcelAsync<T>(IEnumerable<T> items)
         {
             if (!items.Any())
@@ -53,14 +53,59 @@ namespace ClientRegistry.Service.Services
                     for (int col = 0; col < properties.Length; col++)
                     {
                         var value = properties[col].GetValue(item);
-                        worksheet.Cells[row, col + 1].Value = value;
+                        var cell = worksheet.Cells[row, col + 1];
+
+                        if (value is DateTime dateTimeValue)
+                        {
+                            cell.Value = dateTimeValue;
+                            cell.Style.Numberformat.Format = "dd/MM/yyyy HH:mm:ss";
+                        }
+                        else if (value is bool boolValue)
+                        {
+                            cell.Value = boolValue ? "Yes" : "No";
+                        }
+                        else
+                        {
+                            cell.Value = value;
+                        }
                     }
                     row++;
                 }
+
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
                 return package.GetAsByteArray();
             }
         }
+
+
+
+        #region Data
+
+        public async Task<CadastroPorDia> GetCadastrosPorDia(DateTime? startDate, DateTime? endDate)
+        {
+            var (validStartDate, validEndDate) = GetDateRange(startDate, endDate);
+            return await _clientRepository.GetCadastrosPorDia(validStartDate, validEndDate);
+        }
+
+        public async Task<ProporcaoTipoPessoa> GetProporcaoTipoPessoa(DateTime? startDate, DateTime? endDate)
+        {
+            var (validStartDate, validEndDate) = GetDateRange(startDate, endDate);
+            return await _clientRepository.GetProporcaoTipoPessoa(validStartDate, validEndDate);
+        }
+
+        public async Task<EvolucaoCadastros> GetEvolucaoCadastros(DateTime? startDate, DateTime? endDate)
+        {
+            var (validStartDate, validEndDate) = GetDateRange(startDate, endDate);
+            return await _clientRepository.GetEvolucaoCadastros(validStartDate, validEndDate);
+        }
+
+        public async Task<CadastroPorDiaTipo> GetCadastroPorDiaTipo(DateTime? startDate, DateTime? endDate)
+        {
+            var (validStartDate, validEndDate) = GetDateRange(startDate, endDate);
+            return await _clientRepository.GetCadastroPorDiaTipo(validStartDate, validEndDate);
+        }
+
+        #endregion
 
         #region Basics
         public async Task<Client?> GetById(Guid id)
@@ -112,6 +157,25 @@ namespace ClientRegistry.Service.Services
         {
             _clientRepository?.Dispose();
         }
+
+        #endregion
+
+        #region Util
+        private (DateTime startDate, DateTime endDate) GetDateRange(DateTime? startDate, DateTime? endDate)
+        {
+            if (!startDate.HasValue)
+            {
+                startDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+
+            if (!endDate.HasValue)
+            {
+                endDate = new DateTime(DateTime.Now.Year, 12, 31);
+            }
+
+            return (startDate.Value, endDate.Value);
+        }
+
         #endregion
     }
 }

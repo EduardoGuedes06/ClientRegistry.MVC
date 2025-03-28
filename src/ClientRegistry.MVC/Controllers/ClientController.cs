@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using ClientRegistry.Data.Repository;
 using ClientRegistry.Domain;
 using ClientRegistry.Domain.Interfaces;
 using ClientRegistry.Domain.Models;
 using ClientRegistry.MVC.Models;
+using ClientRegistry.MVC.Models.Data;
 using ClientRegistry.MVC.Models.Validation;
 using ClientRegistry.MVC.Models.Validation.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -52,9 +54,28 @@ namespace ClientRegistry.MVC.Controllers
         }
 
         // GET: Data
-        public IActionResult Data()
+        public async Task<IActionResult> DataAsync(DateTime? startDate, DateTime? endDate)
         {
-            return View();
+            startDate = startDate ?? new DateTime(DateTime.Now.Year, 1, 1);
+            endDate = endDate ?? new DateTime(DateTime.Now.Year, 12, 31);
+
+            var cadastroPorDia = await _clientService.GetCadastrosPorDia(startDate, endDate);
+            var proporcaoTipoPessoa = await _clientService.GetProporcaoTipoPessoa(startDate, endDate);
+            var evolucaoCadastros = await _clientService.GetEvolucaoCadastros(startDate, endDate);
+            var cadastroPorDiaTipo = await _clientService.GetCadastroPorDiaTipo(startDate, endDate);
+
+            var model = new DataViewModel
+            {
+                CadastroPorDia = _mapper.Map<CadastroPorDiaViewModel>(cadastroPorDia),
+                ProporcaoTipoPessoa = _mapper.Map<ProporcaoTipoPessoaViewModel>(proporcaoTipoPessoa),
+                EvolucaoCadastros = _mapper.Map<EvolucaoCadastrosViewModel>(evolucaoCadastros),
+                CadastroPorDiaTipo = _mapper.Map<CadastroPorDiaTipoViewModel>(cadastroPorDiaTipo),
+
+                StartDate = startDate.Value.ToString("yyyy-MM-dd"),
+                EndDate = endDate.Value.ToString("yyyy-MM-dd")
+            };
+
+            return View(model);
         }
 
         // GET: Tela de Cadastro/Edição
