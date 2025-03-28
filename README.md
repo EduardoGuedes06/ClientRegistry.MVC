@@ -30,7 +30,7 @@ No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e config
 
 No Gerenciador de Pacotes do VStudio, selecione o ProjetoPadrão: Infra, e digite: `Update-Database`
 
-[Baixar arquivo com Inserts para o MYSQL](https://raw.githubusercontent.com/EduardoGuedes06/ClientRegistry.MVC/doc/Insert.sql)
+[Baixar arquivo com Inserts para o MYSQL](https://raw.githubusercontent.com/EduardoGuedes06/ClientRegistry.MVC/main/doc/Insert.sql)
 
 
 ## Funcionalidades
