@@ -5,9 +5,8 @@ using ClientRegistry.Domain.Models;
 using ClientRegistry.MVC.Models;
 using ClientRegistry.MVC.Models.Validation;
 using ClientRegistry.MVC.Models.Validation.Utils;
-using ClientRegistry.MVC.Models.Validations.Utils;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 namespace ClientRegistry.MVC.Controllers
 {
     public class ClientController : BaseController
@@ -20,11 +19,13 @@ namespace ClientRegistry.MVC.Controllers
         {
             _clientService = clientService;
             _mapper = mapper;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         // GET: Listagem com Paginação e Filtro
         public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10)
         {
+
             var pagedClients = await _clientService.GetPaged(search, page, pageSize);
             var clientViewModels = _mapper.Map<IEnumerable<ClientViewModel>>(pagedClients.Items);
 
@@ -38,15 +39,23 @@ namespace ClientRegistry.MVC.Controllers
                 TotalItems = pagedClients.TotalCount
             };
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return PartialView("_ClientList", viewModel);
-            }
-
             return View(viewModel);
         }
 
+        // GET: Exportação em XLS
+        public async Task<IActionResult> ExportToExcel(string? search,int page, int pageSize = 10)
+        {
+            var clients = await _clientService.GetPaged(search, page, pageSize);
+            var excelFile = await _clientService.ExportToExcelAsync(clients.Items);
+            return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{DateTime.UtcNow}.xlsx");
 
+        }
+
+        // GET: Data
+        public IActionResult Data()
+        {
+            return View();
+        }
 
         // GET: Tela de Cadastro/Edição
         public async Task<IActionResult> UpSert(Guid? id)
@@ -64,7 +73,6 @@ namespace ClientRegistry.MVC.Controllers
 
         // POST: Salvar Cadastro/Edição
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpSert(ClientViewModel model)
         {
             var client = _mapper.Map<Client>(model);
@@ -102,7 +110,7 @@ namespace ClientRegistry.MVC.Controllers
 
             if (OperacaoValida())
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Client");
             }
             return View(model);
         }
@@ -119,7 +127,7 @@ namespace ClientRegistry.MVC.Controllers
 
             await _clientService.Remove(id);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Client");
         }
 
 

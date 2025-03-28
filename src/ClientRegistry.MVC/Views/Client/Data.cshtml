@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Data";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="grid-container">
+    <div class="chart-item"><canvas id="cadastrosPorDia"></canvas></div>
+    <div class="chart-item"><canvas id="proporcaoTipoPessoa"></canvas></div>
+    <div class="chart-item"><canvas id="evolucaoCadastros"></canvas></div>
+    <div class="chart-item"><canvas id="cadastrosPorDiaTipo"></canvas></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+
+    h2 {
+        margin-top: 20px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 90%;
+        max-width: 1200px;
+        margin-bottom: 30px; /* Margem inferior de 30px */
+    }
+
+    .chart-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    canvas {
+        width: 100%;
+        height: 350px;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        let dados = {
+            dias: ["25/03", "26/03", "27/03", "28/03", "29/03"],
+            cadastros: [10, 20, 5, 30, 15],
+            pessoaFisica: [6, 12, 3, 20, 9],
+            pessoaJuridica: [4, 8, 2, 10, 6]
+        };
+
+        // 📊 1. Cadastros por Dia
+        new Chart(document.getElementById("cadastrosPorDia"), {
+            type: "bar",
+            data: {
+                labels: dados.dias,
+                datasets: [{
+                    label: "Cadastros por Dia",
+                    data: dados.cadastros,
+                    backgroundColor: "rgba(54, 162, 235, 0.6)"
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 🥧 2. Proporção de PF vs PJ
+        let totalPF = dados.pessoaFisica.reduce((a, b) => a + b, 0);
+        let totalPJ = dados.pessoaJuridica.reduce((a, b) => a + b, 0);
+        new Chart(document.getElementById("proporcaoTipoPessoa"), {
+            type: "pie",
+            data: {
+                labels: ["Pessoa Física", "Pessoa Jurídica"],
+                datasets: [{
+                    data: [totalPF, totalPJ],
+                    backgroundColor: ["#36A2EB", "#FF6384"]
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 📈 3. Evolução Acumulada de Cadastros
+        let acumulado = [];
+        dados.cadastros.reduce((sum, val, i) => acumulado[i] = sum + val, 0);
+        new Chart(document.getElementById("evolucaoCadastros"), {
+            type: "line",
+            data: {
+                labels: dados.dias,
+                datasets: [{
+                    label: "Evolução dos Cadastros",
+                    data: acumulado,
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    fill: true
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 📊 4. PF vs PJ por Dia
+        new Chart(document.getElementById("cadastrosPorDiaTipo"), {
+            type: "bar",
+            data: {
+                labels: dados.dias,
+                datasets: [
+                    {
+                        label: "Pessoa Física",
+                        data: dados.pessoaFisica,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)"
+                    },
+                    {
+                        label: "Pessoa Jurídica",
+                        data: dados.pessoaJuridica,
+                        backgroundColor: "rgba(255, 99, 132, 0.6)"
+                    }
+                ]
+            },
+            options: { responsive: true }
+        });
+    });
+</script>

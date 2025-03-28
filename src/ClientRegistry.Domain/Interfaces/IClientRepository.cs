@@ -10,6 +10,6 @@ namespace ClientRegistry.Domain.Interfaces
 {
     public interface IClientRepository : IRepository<Client>
     {
-        Task<PagedResult<Client>> GetPaged(string? search, int page, int pageSize);
+        Task<PagedResult<Client>> GetPaged(string? search, int pageSize, int? page = null);
     }
 }

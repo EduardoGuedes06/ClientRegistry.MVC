@@ -10,7 +10,7 @@ namespace ClientRegistry.Domain.Interfaces
 {
     public interface IPagedResultRepository<T> where T : class
     {
-        Task<PagedResult<T>> GetPagedResult(IQueryable<T> query, int page, int pageSize);
+        Task<PagedResult<T>> GetPagedResult(IQueryable<T> query, int pageSize, int? page = null);
     }
 
 

@@ -1,6 +1,9 @@
 ﻿using ClientRegistry.Domain;
 using ClientRegistry.Domain.Interfaces;
 using ClientRegistry.Domain.Models;
+using OfficeOpenXml;
+using System.Drawing.Printing;
+using System.Reflection;
 
 namespace ClientRegistry.Service.Services
 {
@@ -16,9 +19,50 @@ namespace ClientRegistry.Service.Services
 
         public async Task<PagedResult<Client>> GetPaged(string? search, int page, int pageSize)
         {
-            return await _clientRepository.GetPaged(search, page, pageSize);
+            return await _clientRepository.GetPaged(search, pageSize, page);
         }
 
+        public async Task<IEnumerable<Client>> GetWhitoutPagination(string? search, int pageSize)
+        {
+            var pagedResult = await _clientRepository.GetPaged(search, pageSize, page: null);
+            return pagedResult.Items;
+        }
+
+
+        public async Task<byte[]> ExportToExcelAsync<T>(IEnumerable<T> items)
+        {
+            if (!items.Any())
+            {
+                return Array.Empty<byte>();
+            }
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Data");
+
+                var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+                for (int col = 0; col < properties.Length; col++)
+                {
+                    worksheet.Cells[1, col + 1].Value = properties[col].Name;
+                }
+
+                int row = 2;
+                foreach (var item in items)
+                {
+                    for (int col = 0; col < properties.Length; col++)
+                    {
+                        var value = properties[col].GetValue(item);
+                        worksheet.Cells[row, col + 1].Value = value;
+                    }
+                    row++;
+                }
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                return package.GetAsByteArray();
+            }
+        }
+
+        #region Basics
         public async Task<Client?> GetById(Guid id)
         {
             return await _clientRepository.ObterPorId(id);
@@ -68,5 +112,6 @@ namespace ClientRegistry.Service.Services
         {
             _clientRepository?.Dispose();
         }
+        #endregion
     }
 }

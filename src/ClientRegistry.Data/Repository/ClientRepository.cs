@@ -15,7 +15,7 @@ namespace ClientRegistry.Data.Repository
             _pagedResultRepository = pagedResultRepository;
         }
 
-        public async Task<PagedResult<Client>> GetPaged(string? search, int page, int pageSize)
+        public async Task<PagedResult<Client>> GetPaged(string? search, int pageSize, int? page = null)
         {
             IQueryable<Client> query = Db.Client.AsNoTracking();
             query = query.Where(c => c.Active == true);
@@ -29,7 +29,8 @@ namespace ClientRegistry.Data.Repository
                     c.Type.Contains(search));
             }
 
-            return await _pagedResultRepository.GetPagedResult(query, page, pageSize);
+            return await _pagedResultRepository.GetPagedResult(query, pageSize, page);
         }
+
     }
 }

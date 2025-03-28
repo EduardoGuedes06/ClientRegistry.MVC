@@ -15,5 +15,7 @@ namespace ClientRegistry.Domain.Interfaces
         Task<IEnumerable<Client>> GetAll();
         Task<Client?> GetById(Guid id);
         Task<PagedResult<Client>> GetPaged(string? search, int page, int pageSize);
+        Task<byte[]> ExportToExcelAsync<T>(IEnumerable<T> items);
+        Task<IEnumerable<Client>> GetWhitoutPagination(string? search, int pageSize);
     }
 }

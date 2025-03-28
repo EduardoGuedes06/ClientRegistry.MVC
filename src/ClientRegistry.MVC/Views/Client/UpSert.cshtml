@@ -27,13 +27,19 @@
 
     <input asp-for="Type" type="hidden" id="Type" />
 
-    <button type="submit" class="btn btn-primary">Save</button>
+    <div class="form-group">
+        <div class="button-container">
+            <button type="submit" class="btn btn-secondary text-white btn-hover">
+                <i class="fas fa-save"></i> Save
+            </button>
+            <a href="@Url.Action("Index", "Client")" class="btn btn-secondary text-white btn-hover">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
 </form>
 
-<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Back</a>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function () {
 
@@ -102,3 +108,25 @@
         });
     });
 </script>
+
+<style>
+    .button-container {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+        margin-top: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+        .form-group input {
+            margin-bottom: 10px;
+        }
+</style>

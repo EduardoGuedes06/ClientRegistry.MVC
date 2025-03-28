@@ -1,0 +1,157 @@
+﻿@model PagedClientViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Clients</h2>
+
+<div class="container">
+
+    <div class="d-flex align-items-center mb-3">
+        <form method="get" id="search-form" class="mb-0 d-flex align-items-center w-35" style="margin-bottom: 20px;">
+            <div class="form-group mb-0 me-3">
+                <input type="text" name="search" class="form-control" placeholder="Search" value="@Model.Search" />
+            </div>
+            <button type="submit" class="btn btn-secondary text-white btn-hover" style="height: 40px !important; font-size: 14px !important; margin-right: 15px;">
+                <i class="fas fa-search" style="margin-right: 8px;"></i> Search
+            </button>
+            <div class="d-flex align-items-center mb-0">
+                @Html.DropDownListFor(
+                         x => x.PageSize,
+                         new List<SelectListItem>
+                {
+                new SelectListItem() { Text = "10", Value = "10" },
+                new SelectListItem() { Text = "20", Value = "20" },
+                new SelectListItem() { Text = "30", Value = "30" },
+                new SelectListItem() { Text = "50", Value = "50" }
+                },
+                         new { @class = "form-control", style = "width: 60px; height: 40px; font-size: 12px;" }
+                         )
+            </div>
+        </form>
+
+        <div style="margin-left: 18px;">
+            <a href="@Url.Action("ExportToExcel", "Client", new { search = @Model.Search, page = Model.Page, pageSize = Model.PageSize })"
+               class="btn btn-secondary text-white btn-hover"
+               style="height: 40px !important; font-size: 14px !important; display: flex; align-items: center;">
+                <i class="fas fa-file-excel" style="margin-right: 8px;"></i> Export Excel
+            </a>
+        </div>
+
+
+    </div>
+
+
+
+    <table class="table" id="clientTable">
+        <thead>
+            <tr>
+                <th data-column="name">Name <i class="fas fa-sort"></i></th>
+                <th data-column="phone">Phone <i class="fas fa-sort"></i></th>
+                <th data-column="type">Type <i class="fas fa-sort"></i></th>
+                <th data-column="document">Document <i class="fas fa-sort"></i></th>
+                <th data-column="register">Register <i class="fas fa-sort"></i></th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in Model.Clients)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Phone</td>
+                    <td>@client.Type</td>
+                    <td>@client.Document</td>
+                    <td>@client.RegisterDateTime</td>
+                    <td>
+                        <a href="@Url.Action("UpSert", "Client", new { id = client.Id })" class="btn btn-light text-primary btn-hover">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="@Url.Action("Delete", "Client", new { id = client.Id })" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-light text-danger btn-hover">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex">
+            @if (Model.Page > 1)
+            {
+                <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })" class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-right: 20px;">
+                    <i class="fas fa-file" style="margin-right: 8px;"></i> Before
+                </a>
+            }
+
+            @if (Model.Page < Model.TotalPages)
+            {
+                <a href="@Url.Action("Index", new { search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })" class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-left: 20px;">
+                    <i class="fas fa-file" style="margin-right: 8px;"></i> Next
+                </a>
+            }
+        </div>
+        <div class="position-relative w-100 d-flex align-items-center justify-content-center">
+            <span class="position-absolute" style="left: 50%; transform: translateX(-105%);">Página @Model.Page de @Model.TotalPages</span>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var sortDirection = 'asc';
+
+        $('th[data-column]').click(function () {
+            var column = $(this).data('column');
+            var rows = $('#clientTable tbody tr').get();
+
+            sortDirection = (sortDirection === 'asc') ? 'desc' : 'asc';
+
+            rows.sort(function (a, b) {
+                var A = $(a).children('td').eq($(this).index()).text().toUpperCase();
+                var B = $(b).children('td').eq($(this).index()).text().toUpperCase();
+
+                if (sortDirection === 'asc') {
+                    return A < B ? -1 : A > B ? 1 : 0;
+                } else {
+                    return A > B ? -1 : A < B ? 1 : 0;
+                }
+            });
+
+            $.each(rows, function (index, row) {
+                $('#clientTable tbody').append(row);
+            });
+
+            updateSortIcons($(this));
+        });
+
+
+        function updateSortIcons(clickedHeader) {
+            $('th i').removeClass('fa-sort-up fa-sort-down');
+            var icon = clickedHeader.find('i');
+
+            if (sortDirection === 'asc') {
+                icon.addClass('fa-sort-up');
+            } else {
+                icon.addClass('fa-sort-down');
+            }
+        }
+    });
+</script>
