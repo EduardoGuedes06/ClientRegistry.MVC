@@ -24,6 +24,7 @@ No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e config
     "connection": "server=localhost;initial catalog=ClientRegistryDataBase;uid=*admin*;pwd=*admin*;"
   }
 }
+```
 
 ### 2. Executar a ORM para a geração do Banco no `appsettings.json`
 
