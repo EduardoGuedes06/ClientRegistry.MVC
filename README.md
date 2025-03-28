@@ -30,12 +30,13 @@ No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e config
 
 No Gerenciador de Pacotes do VStudio, selecione o ProjetoPadrão: Infra, e digite: `Update-Database`
 
-[Baixar arquivo com Inserts para o MYSQL](https://raw.githubusercontent.com/EduardoGuedes06/ClientRegistry.MVC/main/doc/Insert.sql)
-
+[Baixar arquivo com Inserts para a tabela Cliente (MYSQL)](https://raw.githubusercontent.com/EduardoGuedes06/ClientRegistry.MVC/main/doc/Insert.sql)
 
 ## Funcionalidades
 
 ### Cadastro de Clientes
+
+![Cadastro](doc/Images/Register.PNG)
 
 O sistema permite o cadastro de clientes com as seguintes informações:
 - **Nome**: Nome completo do cliente.
@@ -52,14 +53,19 @@ O sistema permite o cadastro de clientes com as seguintes informações:
 
 ### Edição e Remoção de Clientes
 
+![Edit](doc/Images/Edit.PNG)
+
 - **Edição**: Possibilidade de editar todos os campos, exceto a data de cadastro.
 - **Remoção**: Realização de **soft delete** (registro marcado como removido, sem exclusão física no banco).
 
 ### Listagem de Clientes
 
+![Start](doc/Images/Start.PNG)
 - **Filtros**: É possível filtrar os clientes por **Nome** ou **Documento**.
 
 ### Gráficos Gerados
+
+    ![Data](doc/Images/Data.PNG)
 
 - **Cadastros por Dia**: Gráfico de barras mostrando os cadastros por dia.
 - **Proporção de PF vs PJ**: Gráfico de pizza exibindo a proporção de clientes PF e PJ.
