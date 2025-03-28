@@ -12,6 +12,23 @@ Este é o sistema **ClientRegistry** que permite o cadastro, visualização, edi
 - **Gráficos**: **Chart.js** para gerar gráficos interativos
 - **Exportação de Dados**: **EPPlus** para exportação para Excel
 
+## Configuração do Ambiente
+
+### 1. Configurar a String de Conexão no `appsettings.json`
+
+No arquivo `appsettings.json`, localize a seção `"ConnectionStrings"` e configure a string de conexão para o MySQL:
+
+```json
+{
+  "ConnectionStrings": {
+    "connection": "server=localhost;initial catalog=ClientRegistryDataBase;uid=*admin*;pwd=*admin*;"
+  }
+}
+
+### 2. Executar a ORM para a geração do Banco no `appsettings.json`
+
+No Gerenciador de Pacotes do VStudio, selecione o ProjetoPadrão: Infra, e digite: `Update-Database`
+
 ## Funcionalidades
 
 ### Cadastro de Clientes
