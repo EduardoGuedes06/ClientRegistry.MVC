@@ -164,6 +164,7 @@ namespace ClientRegistry.MVC.Controllers
             return View(model);
         }
 
+        //Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)

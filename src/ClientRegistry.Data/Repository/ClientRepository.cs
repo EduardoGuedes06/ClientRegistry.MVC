@@ -44,7 +44,7 @@ namespace ClientRegistry.Data.Repository
                 .GroupBy(c => c.RegisterDateTime.Date)
                 .Select(g => new
                 {
-                    Dia = g.Key, // Mantenha como DateTime
+                    Dia = g.Key,
                     Count = g.Count()
                 })
                 .OrderBy(x => x.Dia)
@@ -52,7 +52,7 @@ namespace ClientRegistry.Data.Repository
 
             return new CadastroPorDia
             {
-                Dias = result.Select(r => r.Dia.ToString("dd/MM")).ToList(), // Converta para string aqui
+                Dias = result.Select(r => r.Dia.ToString("dd/MM")).ToList(),
                 Cadastros = result.Select(r => r.Count).ToList()
             };
         }
@@ -123,7 +123,7 @@ namespace ClientRegistry.Data.Repository
                 })
                 .ToListAsync();
 
-            var dias = result.Select(r => r.Dia.ToString("dd/MM")).Distinct().OrderBy(d => d).ToList(); // Converta para string aqui
+            var dias = result.Select(r => r.Dia.ToString("dd/MM")).Distinct().OrderBy(d => d).ToList();
             var pessoaFisica = dias.Select(d => result.Where(r => r.Dia.ToString("dd/MM") == d && r.Tipo == "PF").Sum(r => r.Count)).ToList();
             var pessoaJuridica = dias.Select(d => result.Where(r => r.Dia.ToString("dd/MM") == d && r.Tipo == "PJ").Sum(r => r.Count)).ToList();
 
